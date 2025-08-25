@@ -159,26 +159,13 @@ export function DynamicCard() {
     }
   };
 
-  // Use loaded card data or default
-  const cardImage = cardData?.svgUrl || '/iryscard.svg';
-  const cardName = cardData?.name || 'Easter Card';
+     // Use loaded card data or default
+   const cardImage = cardData?.svgUrl || '/iryscard.svg';
+   const cardName = cardData?.name || `${actualCardId.toUpperCase()} Card`;
 
-        // Show loading or not found state
+        // If no custom card is published, show default card template
    if (!cardData) {
-     return (
-       <div className="min-h-screen bg-black text-white p-6">
-         <div className="max-w-4xl mx-auto text-center">
-           <h1 className="text-4xl font-bold mb-4">Card Not Found</h1>
-           <p className="text-xl text-gray-300 mb-6">The card "{actualCardId}" has not been published yet.</p>
-           <a 
-             href="/" 
-             className="bg-[#67FFD4] text-black px-6 py-3 rounded-lg font-bold hover:bg-[#00D4AA] transition-colors"
-           >
-             Go to Home
-           </a>
-         </div>
-       </div>
-     );
+     console.log('📝 No custom card published yet, showing default template for:', actualCardId);
    }
 
   return (
@@ -192,10 +179,15 @@ export function DynamicCard() {
               {cardName.toUpperCase()} GENERATOR
             </h1>
           </div>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Create your personalized {cardName.toLowerCase()} with IRYS payment. Connect your wallet and pay 0.05 IRYS to generate your unique card.
-          </p>
-                     <p className="text-sm text-gray-500 mt-2">Card ID: {actualCardId}</p>
+                     <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+             Create your personalized {cardName.toLowerCase()} with IRYS payment. Connect your wallet and pay 0.05 IRYS to generate your unique card.
+           </p>
+           <p className="text-sm text-gray-500 mt-2">Card ID: {actualCardId}</p>
+           {!cardData && (
+             <p className="text-sm text-yellow-400 mt-2">
+               ⚠️ This creator hasn't published a custom card yet. Using default template.
+             </p>
+           )}
         </div>
 
         {/* Wallet Connection */}
