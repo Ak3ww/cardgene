@@ -7,6 +7,9 @@ import { Download, CreditCard, Sparkles, Wallet, Move } from 'lucide-react';
 export function DynamicCard() {
   const { cardId } = useParams();
   const actualCardId = cardId || 'egcard1'; // fallback
+  
+  console.log('🚀 DynamicCard component mounted');
+  console.log('🔗 URL params:', { cardId, actualCardId });
   const { address, isConnected } = useAccount();
   const [userName, setUserName] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);

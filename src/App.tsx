@@ -15,7 +15,7 @@ function App() {
         <Route path="/admin" element={<AdminDashboard />} />
         
         {/* Dynamic Card Routes - handles any egcard ID */}
-        <Route path="/egcard:cardId" element={<DynamicCard />} />
+        <Route path="/egcard/:cardId" element={<DynamicCard />} />
         
         {/* Catch all - redirect to home */}
         <Route path="*" element={<Navigate to="/" replace />} />
