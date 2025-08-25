@@ -5,20 +5,63 @@ import { Download, CreditCard, Sparkles, Wallet, Move } from 'lucide-react';
 
 interface DynamicCardProps {
   cardId: string;
-  cardData?: {
-    svgUrl: string;
-    name: string;
-  };
 }
 
-export function DynamicCard({ cardId, cardData }: DynamicCardProps) {
+export function DynamicCard({ cardId }: DynamicCardProps) {
   const { address, isConnected } = useAccount();
   const [userName, setUserName] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [isPaid, setIsPaid] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState('');
   const [textPosition, setTextPosition] = useState({ x: 108, y: 108 });
+  const [cardData, setCardData] = useState<any>(null);
   const cardRef = useRef<HTMLDivElement>(null);
+
+  // Load card data from localStorage on component mount and listen for changes
+  React.useEffect(() => {
+    const loadCardData = () => {
+      try {
+        const publishedCards = JSON.parse(localStorage.getItem('publishedCards') || '[]');
+        const card = publishedCards.find((c: any) => c.id === cardId);
+        if (card) {
+          setCardData(card);
+          // Set text position from card's text fields if available
+          if (card.textFields && card.textFields.length > 0) {
+            const textField = card.textFields[0];
+            setTextPosition(textField.position);
+            console.log('🔄 Live page updated with new position:', textField.position);
+          }
+        }
+      } catch (error) {
+        console.error('Error loading card data:', error);
+      }
+    };
+
+    // Load initial data
+    loadCardData();
+
+    // Listen for localStorage changes (works across tabs)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'publishedCards') {
+        loadCardData();
+      }
+    };
+
+    // Listen for custom events (works within same tab)
+    const handleCustomChange = () => {
+      loadCardData();
+    };
+
+    // Add event listeners
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('cardPositionUpdated', handleCustomChange);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('cardPositionUpdated', handleCustomChange);
+    };
+  }, [cardId]);
 
   // Mock contract interaction - replace with actual IRYS payment contract
   const { data: hash, writeContract, isPending } = useWriteContract();
@@ -112,9 +155,27 @@ export function DynamicCard({ cardId, cardData }: DynamicCardProps) {
     }
   };
 
-  // Use default card if no custom card data
+  // Use loaded card data or default
   const cardImage = cardData?.svgUrl || '/iryscard.svg';
   const cardName = cardData?.name || 'Easter Card';
+
+  // Show loading or not found state
+  if (!cardData && cardId !== 'egcard1') {
+    return (
+      <div className="min-h-screen bg-black text-white p-6">
+        <div className="max-w-4xl mx-auto text-center">
+          <h1 className="text-4xl font-bold mb-4">Card Not Found</h1>
+          <p className="text-xl text-gray-300 mb-6">The card "{cardId}" has not been published yet.</p>
+          <a 
+            href="/" 
+            className="bg-[#67FFD4] text-black px-6 py-3 rounded-lg font-bold hover:bg-[#00D4AA] transition-colors"
+          >
+            Go to Home
+          </a>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-black text-white p-6">
