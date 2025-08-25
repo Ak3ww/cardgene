@@ -18,23 +18,28 @@ export function DynamicCard() {
 
   // Load card data from localStorage on component mount and listen for changes
   React.useEffect(() => {
-    const loadCardData = () => {
-      try {
-        const publishedCards = JSON.parse(localStorage.getItem('publishedCards') || '[]');
-        const card = publishedCards.find((c: any) => c.id === actualCardId);
-        if (card) {
-          setCardData(card);
-          // Set text position from card's text fields if available
-          if (card.textFields && card.textFields.length > 0) {
-            const textField = card.textFields[0];
-            setTextPosition(textField.position);
-            console.log('🔄 Live page updated with new position:', textField.position);
-          }
-        }
-      } catch (error) {
-        console.error('Error loading card data:', error);
-      }
-    };
+         const loadCardData = () => {
+       try {
+         console.log('🔍 Loading card data for:', actualCardId);
+         const publishedCards = JSON.parse(localStorage.getItem('publishedCards') || '[]');
+         console.log('📚 Published cards:', publishedCards);
+         const card = publishedCards.find((c: any) => c.id === actualCardId);
+         console.log('🎯 Found card:', card);
+         if (card) {
+           setCardData(card);
+           // Set text position from card's text fields if available
+           if (card.textFields && card.textFields.length > 0) {
+             const textField = card.textFields[0];
+             setTextPosition(textField.position);
+             console.log('🔄 Live page updated with new position:', textField.position);
+           }
+         } else {
+           console.log('❌ No card found for ID:', actualCardId);
+         }
+       } catch (error) {
+         console.error('Error loading card data:', error);
+       }
+     };
 
     // Load initial data
     loadCardData();
@@ -158,23 +163,23 @@ export function DynamicCard() {
   const cardImage = cardData?.svgUrl || '/iryscard.svg';
   const cardName = cardData?.name || 'Easter Card';
 
-     // Show loading or not found state
-   if (!cardData && actualCardId !== 'egcard1') {
-    return (
-      <div className="min-h-screen bg-black text-white p-6">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl font-bold mb-4">Card Not Found</h1>
-          <p className="text-xl text-gray-300 mb-6">The card "{cardId}" has not been published yet.</p>
-          <a 
-            href="/" 
-            className="bg-[#67FFD4] text-black px-6 py-3 rounded-lg font-bold hover:bg-[#00D4AA] transition-colors"
-          >
-            Go to Home
-          </a>
-        </div>
-      </div>
-    );
-  }
+        // Show loading or not found state
+   if (!cardData) {
+     return (
+       <div className="min-h-screen bg-black text-white p-6">
+         <div className="max-w-4xl mx-auto text-center">
+           <h1 className="text-4xl font-bold mb-4">Card Not Found</h1>
+           <p className="text-xl text-gray-300 mb-6">The card "{actualCardId}" has not been published yet.</p>
+           <a 
+             href="/" 
+             className="bg-[#67FFD4] text-black px-6 py-3 rounded-lg font-bold hover:bg-[#00D4AA] transition-colors"
+           >
+             Go to Home
+           </a>
+         </div>
+       </div>
+     );
+   }
 
   return (
     <div className="min-h-screen bg-black text-white p-6">
