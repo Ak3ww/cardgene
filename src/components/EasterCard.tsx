@@ -124,6 +124,17 @@ export function EasterCard() {
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">
             Create your personalized Easter card with IRYS payment. Connect your wallet and pay 0.05 IRYS to generate your unique card.
           </p>
+          
+          {/* Admin Dashboard Link */}
+          <div className="mt-6">
+            <a 
+              href="/admin" 
+              className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white px-4 py-2 rounded-lg transition-all duration-300"
+            >
+              <Sparkles className="w-4 h-4" />
+              Creator Dashboard
+            </a>
+          </div>
         </div>
 
         {/* Wallet Connection */}
