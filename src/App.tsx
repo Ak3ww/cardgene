@@ -14,12 +14,8 @@ function App() {
         {/* Admin Dashboard */}
         <Route path="/admin" element={<AdminDashboard />} />
         
-        {/* Dynamic Card Routes */}
-        <Route path="/egcard1" element={<DynamicCard cardId="egcard1" />} />
-        <Route path="/egcard2" element={<DynamicCard cardId="egcard2" />} />
-        <Route path="/egcard3" element={<DynamicCard cardId="egcard3" />} />
-        <Route path="/egcard4" element={<DynamicCard cardId="egcard4" />} />
-        <Route path="/egcard5" element={<DynamicCard cardId="egcard5" />} />
+        {/* Dynamic Card Routes - handles any egcard ID */}
+        <Route path="/egcard:cardId" element={<DynamicCard />} />
         
         {/* Catch all - redirect to home */}
         <Route path="*" element={<Navigate to="/" replace />} />

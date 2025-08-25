@@ -150,8 +150,9 @@ export function AdminDashboard() {
     try {
       // Use current domain (works for both localhost and production)
       const currentDomain = window.location.origin;
-      await navigator.clipboard.writeText(`${currentDomain}${url}`);
-      setUploadStatus('URL copied to clipboard!');
+      const fullUrl = `${currentDomain}${url}`;
+      await navigator.clipboard.writeText(fullUrl);
+      setUploadStatus(`URL copied to clipboard: ${fullUrl}`);
     } catch (error) {
       setUploadStatus('Failed to copy URL');
     }
@@ -209,6 +210,9 @@ export function AdminDashboard() {
           <h1 className="text-4xl font-bold mb-4">🎨 Creator Dashboard</h1>
           <p className="text-xl text-gray-300">Welcome, {address?.slice(0, 6)}...{address?.slice(-4)}</p>
           <p className="text-gray-400">Upload your custom cards and share them with the world</p>
+          <p className="text-xs text-gray-500 mt-2">
+            Running on: {window.location.origin}
+          </p>
         </div>
 
         {/* Upload Section */}
@@ -462,7 +466,7 @@ export function AdminDashboard() {
                            rel="noopener noreferrer"
                            className="text-[#67FFD4] hover:underline"
                          >
-                           {window.location.host}{card.url}
+                           {window.location.origin}{card.url}
                          </a>
                        </div>
                      </div>

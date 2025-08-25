@@ -1,13 +1,12 @@
 import React, { useState, useRef } from 'react';
+import { useParams } from 'react-router-dom';
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Download, CreditCard, Sparkles, Wallet, Move } from 'lucide-react';
 
-interface DynamicCardProps {
-  cardId: string;
-}
-
-export function DynamicCard({ cardId }: DynamicCardProps) {
+export function DynamicCard() {
+  const { cardId } = useParams();
+  const actualCardId = cardId || 'egcard1'; // fallback
   const { address, isConnected } = useAccount();
   const [userName, setUserName] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
@@ -22,7 +21,7 @@ export function DynamicCard({ cardId }: DynamicCardProps) {
     const loadCardData = () => {
       try {
         const publishedCards = JSON.parse(localStorage.getItem('publishedCards') || '[]');
-        const card = publishedCards.find((c: any) => c.id === cardId);
+        const card = publishedCards.find((c: any) => c.id === actualCardId);
         if (card) {
           setCardData(card);
           // Set text position from card's text fields if available
@@ -61,7 +60,7 @@ export function DynamicCard({ cardId }: DynamicCardProps) {
       window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('cardPositionUpdated', handleCustomChange);
     };
-  }, [cardId]);
+  }, [actualCardId]);
 
   // Mock contract interaction - replace with actual IRYS payment contract
   const { data: hash, writeContract, isPending } = useWriteContract();
@@ -143,7 +142,7 @@ export function DynamicCard({ cardId }: DynamicCardProps) {
       
       // Download the image
       const link = document.createElement('a');
-      link.download = `${cardId}-${userName}.png`;
+             link.download = `${actualCardId}-${userName}.png`;
       link.href = dataUrl;
       link.click();
       
@@ -159,8 +158,8 @@ export function DynamicCard({ cardId }: DynamicCardProps) {
   const cardImage = cardData?.svgUrl || '/iryscard.svg';
   const cardName = cardData?.name || 'Easter Card';
 
-  // Show loading or not found state
-  if (!cardData && cardId !== 'egcard1') {
+     // Show loading or not found state
+   if (!cardData && actualCardId !== 'egcard1') {
     return (
       <div className="min-h-screen bg-black text-white p-6">
         <div className="max-w-4xl mx-auto text-center">
@@ -191,7 +190,7 @@ export function DynamicCard({ cardId }: DynamicCardProps) {
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">
             Create your personalized {cardName.toLowerCase()} with IRYS payment. Connect your wallet and pay 0.05 IRYS to generate your unique card.
           </p>
-          <p className="text-sm text-gray-500 mt-2">Card ID: {cardId}</p>
+                     <p className="text-sm text-gray-500 mt-2">Card ID: {actualCardId}</p>
         </div>
 
         {/* Wallet Connection */}
