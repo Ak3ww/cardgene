@@ -21,28 +21,29 @@ export function DynamicCard() {
 
   // Load card data from localStorage on component mount and listen for changes
   React.useEffect(() => {
-         const loadCardData = () => {
-       try {
-         console.log('🔍 Loading card data for:', actualCardId);
-         const publishedCards = JSON.parse(localStorage.getItem('publishedCards') || '[]');
-         console.log('📚 Published cards:', publishedCards);
-         const card = publishedCards.find((c: any) => c.id === actualCardId);
-         console.log('🎯 Found card:', card);
-         if (card) {
-           setCardData(card);
-           // Set text position from card's text fields if available
-           if (card.textFields && card.textFields.length > 0) {
-             const textField = card.textFields[0];
-             setTextPosition(textField.position);
-             console.log('🔄 Live page updated with new position:', textField.position);
-           }
-         } else {
-           console.log('❌ No card found for ID:', actualCardId);
-         }
-       } catch (error) {
-         console.error('Error loading card data:', error);
-       }
-     };
+    const loadCardData = () => {
+      try {
+        console.log('🔍 Loading card data for:', actualCardId);
+        const publishedCards = JSON.parse(localStorage.getItem('publishedCards') || '[]');
+        console.log('📚 Published cards:', publishedCards);
+        const card = publishedCards.find((c: any) => c.id === actualCardId);
+        console.log('🎯 Found card:', card);
+        if (card) {
+          setCardData(card);
+          // Set text position from card's text fields if available
+          if (card.textFields && card.textFields.length > 0) {
+            const textField = card.textFields[0];
+            setTextPosition(textField.position);
+            console.log('🔄 Live page updated with new position:', textField.position);
+          }
+        } else {
+          console.log('❌ No card found for ID:', actualCardId);
+          // Don't redirect - just show default template
+        }
+      } catch (error) {
+        console.error('Error loading card data:', error);
+      }
+    };
 
     // Load initial data
     loadCardData();
@@ -150,7 +151,7 @@ export function DynamicCard() {
       
       // Download the image
       const link = document.createElement('a');
-             link.download = `${actualCardId}-${userName}.png`;
+      link.download = `${actualCardId}-${userName}.png`;
       link.href = dataUrl;
       link.click();
       
@@ -162,14 +163,14 @@ export function DynamicCard() {
     }
   };
 
-     // Use loaded card data or default
-   const cardImage = cardData?.svgUrl || '/iryscard.svg';
-   const cardName = cardData?.name || `${actualCardId.toUpperCase()} Card`;
+  // Use loaded card data or default
+  const cardImage = cardData?.svgUrl || '/iryscard.svg';
+  const cardName = cardData?.name || `${actualCardId.toUpperCase()} Card`;
 
-        // If no custom card is published, show default card template
-   if (!cardData) {
-     console.log('📝 No custom card published yet, showing default template for:', actualCardId);
-   }
+  // If no custom card is published, show default card template
+  if (!cardData) {
+    console.log('📝 No custom card published yet, showing default template for:', actualCardId);
+  }
 
   return (
     <div className="min-h-screen bg-black text-white p-6">
@@ -182,15 +183,15 @@ export function DynamicCard() {
               {cardName.toUpperCase()} GENERATOR
             </h1>
           </div>
-                     <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-             Create your personalized {cardName.toLowerCase()} with IRYS payment. Connect your wallet and pay 0.05 IRYS to generate your unique card.
-           </p>
-           <p className="text-sm text-gray-500 mt-2">Card ID: {actualCardId}</p>
-           {!cardData && (
-             <p className="text-sm text-yellow-400 mt-2">
-               ⚠️ This creator hasn't published a custom card yet. Using default template.
-             </p>
-           )}
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+            Create your personalized {cardName.toLowerCase()} with IRYS payment. Connect your wallet and pay 0.05 IRYS to generate your unique card.
+          </p>
+          <p className="text-sm text-gray-500 mt-2">Card ID: {actualCardId}</p>
+          {!cardData && (
+            <p className="text-sm text-yellow-400 mt-2">
+              ⚠️ This creator hasn't published a custom card yet. Using default template.
+            </p>
+          )}
         </div>
 
         {/* Wallet Connection */}
